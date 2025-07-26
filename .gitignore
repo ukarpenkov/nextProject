@@ -1,0 +1,3 @@
+# Игнорировать большие файлы
+quotes-db-frontend/server/src/database/data/db-without-rare-categories.sql.gz
+quotes-db-frontend/server/src/database/data/quotes.csv
