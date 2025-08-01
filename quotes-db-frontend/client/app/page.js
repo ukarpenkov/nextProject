@@ -20,11 +20,11 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {quotes.map((quote) => (
                     <div key={quote.id} className="bg-white p-4 shadow-md rounded-lg">
-                        <p className="mb-4 text-lg italic">&quot;{quote.text}&quot;</p>
-                        <p className="text-right font-semibold">— {quote.author}</p>
+                        <p className="mb-4 text-xl italic">&quot;{quote.text}&quot;</p>
+                        <p className="mb-10 text-right font-semibold">— {quote.author}</p>
                         <div className="flex flex-wrap mt-2">
                             {quote.categories.map((category) => (
-                                <span key={category} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full mr-2 mb-2">
+                                <span key={category} className="text-sm bg-gray-200 text-gray-700 px-2 py-1 rounded-full mr-2 mb-2">
                                     {category}
                                 </span>
                             ))}
