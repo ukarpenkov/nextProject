@@ -17,7 +17,6 @@ export default function Home() {
     }
     return (
         <div className="p-4">
-            <h1 className="text-center text-3xl mb-6">Quotes frontend app</h1>
             <div className="text-center mb-6">
                 <QuoteButton text="Fetch Random Quotes" fecthRandomQuotes={fecthRandomQuotes} />
             </div>
