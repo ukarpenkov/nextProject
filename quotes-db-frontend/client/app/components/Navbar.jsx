@@ -9,7 +9,7 @@ export function Navbar() {
                 </Link>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
-                <Link href="/random" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
+                <Link href="/" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
                     Random
                 </Link>
                 <Link href="/search" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
