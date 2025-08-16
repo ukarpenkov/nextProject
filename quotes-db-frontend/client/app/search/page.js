@@ -7,7 +7,7 @@ export default function Search() {
     const [quote, setQuote] = useState('')
     const [author, setAuthor] = useState('')
     const [category, setCategory] = useState('')
-    const [results, setResults] = useState([])
+    const [quotes, setQuotes] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
@@ -20,10 +20,10 @@ export default function Search() {
             if (quote) params.append('quote', quote)
             if (author) params.append('author', author)
             if (category) params.append('category', category)
-            const res = await fetch(`http://localhost:3000//quotes?${params.toString()}`)
+            const res = await fetch(`http://localhost:3000/quotes?${params.toString()}`)
             if (!res.ok) throw new Error('Ошибка запроса')
             const data = await res.json()
-            setResults(data)
+            setQuotes(data)
         } catch (err) {
             setError(err.message)
         } finally {
@@ -57,10 +57,11 @@ export default function Search() {
                         placeholder="Category"
                         className="border px-2 py-1 rounded"
                     />
+                    <button type="submit" className="bg-blue-500 text-white px-4 py-1 mt-2 w-50 self-center">
+                        Найти
+                    </button>
                 </form>
-                <button type="submit" className="bg-blue-500 text-white px-4 py-1 mt-2 w-50 self-center">
-                    Найти
-                </button>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {quotes.map((quote) => (
                         <Quote quote={quote} key={quote.id} />
@@ -69,7 +70,7 @@ export default function Search() {
             </div>
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
-            <ul>
+            {/* <ul>
                 {results.map((item, idx) => (
                     <li key={idx} className="border-b py-2">
                         <div>
@@ -83,7 +84,7 @@ export default function Search() {
                         </div>
                     </li>
                 ))}
-            </ul>
+            </ul> */}
         </div>
     )
 }
