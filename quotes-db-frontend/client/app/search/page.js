@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Quote } from '../components/Quote'
 
 export default function Search() {
     const [quote, setQuote] = useState('')
@@ -60,6 +61,11 @@ export default function Search() {
                 <button type="submit" className="bg-blue-500 text-white px-4 py-1 mt-2 w-50 self-center">
                     Найти
                 </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {quotes.map((quote) => (
+                        <Quote quote={quote} key={quote.id} />
+                    ))}
+                </div>
             </div>
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
