@@ -10,12 +10,14 @@ export default function Search() {
     const [quotes, setQuotes] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [searchSubmitted, setSearchSubmitted] = useState(false)
 
     const handleSearch = async (e) => {
         e.preventDefault()
         setLoading(true)
         setError(null)
         try {
+            setSearchSubmitted(true)
             const params = new URLSearchParams()
             if (quote) params.append('quote', quote)
             if (author) params.append('author', author)
@@ -61,30 +63,18 @@ export default function Search() {
                         Найти
                     </button>
                 </form>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {quotes.map((quote) => (
-                        <Quote quote={quote} key={quote.id} />
-                    ))}
-                </div>
+                {quotes.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {quotes.map((quote) => (
+                            <Quote quote={quote} key={quote.id} />
+                        ))}
+                    </div>
+                ) : (
+                    searchSubmitted && <p className="text-gray-500">No quotes found</p>
+                )}
             </div>
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
-            {/* <ul>
-                {results.map((item, idx) => (
-                    <li key={idx} className="border-b py-2">
-                        <div>
-                            <strong>Quote:</strong> {item.quote}
-                        </div>
-                        <div>
-                            <strong>Author:</strong> {item.author}
-                        </div>
-                        <div>
-                            <strong>Category:</strong> {item.category}
-                        </div>
-                    </li>
-                ))}
-            </ul> */}
         </div>
     )
 }
