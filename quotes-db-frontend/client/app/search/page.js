@@ -12,10 +12,41 @@ export default function Search() {
     const [error, setError] = useState(null)
     const [searchSubmitted, setSearchSubmitted] = useState(false)
 
+    const validateInput = (field, value) => {
+        const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
+        const QUOTE_REGEX = /^[a-zA-Z0-9\s.,!?'"-]+$/
+        const AUTHOR_REGEX = /^[a-zA-Z\s.,!?'"-]+$/
+
+        if (!value) return true
+        switch (field) {
+            case 'quote':
+                return QUOTE_REGEX.test(value)
+            case 'author':
+                return AUTHOR_REGEX.test(value)
+            case 'category':
+                return CATEGORY_NAME_REGEX.test(value)
+            default:
+                return true
+        }
+    }
+
     const handleSearch = async (e) => {
         e.preventDefault()
-        setLoading(true)
         setError(null)
+        if (!validateInput('quote', quote)) {
+            setError('Некорректное значение цитаты')
+            return
+        }
+        if (!validateInput('author', author)) {
+            setError('Некорректное значение автора')
+            return
+        }
+        if (!validateInput('category', category)) {
+            setError('Некорректное значение категории (только маленькие буквы, цифры и - )')
+            return
+        }
+
+        setLoading(true)
         try {
             setSearchSubmitted(true)
             const params = new URLSearchParams()
@@ -63,6 +94,7 @@ export default function Search() {
                         Найти
                     </button>
                 </form>
+                {error && <p className="text-red-500">{error}</p>}
                 {quotes.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {quotes.map((quote) => (
@@ -74,7 +106,6 @@ export default function Search() {
                 )}
             </div>
             {loading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>}
         </div>
     )
 }
