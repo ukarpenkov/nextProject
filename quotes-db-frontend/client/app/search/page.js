@@ -68,31 +68,276 @@ export default function Search() {
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Search Quotes</h1>
             <div className=" flex flex-col gap-2 ">
-                <form onSubmit={handleSearch} className="mb-4 flex flex-col-3 gap-2 justify-center">
-                    <input
-                        type="text"
-                        value={quote}
-                        onChange={(e) => setQuote(e.target.value)}
-                        placeholder="Quote"
-                        className="border px-2 py-1 rounded"
-                    />
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        placeholder="Author"
-                        className="border px-2 py-1 rounded"
-                    />
-                    <input
-                        type="text"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        placeholder="Category"
-                        className="border px-2 py-1 rounded"
-                    />
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-1 mt-2 w-50 self-center">
-                        Найти
-                    </button>
+                <form onSubmit={handleSearch} className="grid">
+                    <div className="mb-4 flex flex-col-3 gap-2 justify-center">
+                        <div
+                            style={{
+                                fontFamily: "'Segoe UI', sans-serif",
+                                margin: '1em 0',
+                                maxWidth: '190px',
+                                position: 'relative',
+                            }}
+                        >
+                            <input
+                                type="text"
+                                value={quote}
+                                autoComplete="off"
+                                style={{
+                                    fontSize: '100%',
+                                    padding: '0.8em',
+                                    outline: 'none',
+                                    border: '2px solid rgb(200, 200, 200)',
+                                    backgroundColor: 'transparent',
+                                    borderRadius: '20px',
+                                    width: '100%',
+                                }}
+                                onFocus={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    label.style.transform = 'translateY(-50%) scale(.9)'
+                                    label.style.margin = '0em'
+                                    label.style.marginLeft = '1.3em'
+                                    label.style.padding = '0.4em'
+                                    label.style.backgroundColor = '#fff'
+                                    e.target.style.borderColor = 'rgb(150, 150, 200)'
+                                }}
+                                onBlur={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    if (!e.target.value) {
+                                        label.style.transform = 'none'
+                                        label.style.margin = ''
+                                        label.style.marginLeft = '0.5em'
+                                        label.style.padding = '0.8em'
+                                        label.style.backgroundColor = 'transparent'
+                                        e.target.style.borderColor = 'rgb(200, 200, 200)'
+                                    }
+                                }}
+                                onChange={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    if (e.target.value) {
+                                        setQuote(e.target.value)
+                                        label.style.transform = 'translateY(-50%) scale(.9)'
+                                        label.style.margin = '0em'
+                                        label.style.marginLeft = '1.3em'
+                                        label.style.padding = '0.4em'
+                                        label.style.backgroundColor = '#fff'
+                                        e.target.style.borderColor = 'rgb(150, 150, 200)'
+                                    } else {
+                                        label.style.transform = 'none'
+                                        label.style.margin = ''
+                                        label.style.marginLeft = '0.5em'
+                                        label.style.padding = '0.8em'
+                                        label.style.backgroundColor = 'transparent'
+                                        e.target.style.borderColor = 'rgb(200, 200, 200)'
+                                    }
+                                }}
+                            />
+                            <label
+                                htmlFor="Quote"
+                                style={{
+                                    fontSize: '100%',
+                                    position: 'absolute',
+                                    left: '0',
+                                    padding: '0.8em',
+                                    marginLeft: '0.5em',
+                                    pointerEvents: 'none',
+                                    transition: 'all 0.3s ease',
+                                    color: 'rgb(100, 100, 100)',
+                                }}
+                            >
+                                Quote
+                            </label>
+                        </div>
+                        <div
+                            style={{
+                                fontFamily: "'Segoe UI', sans-serif",
+                                margin: '1em 0',
+                                maxWidth: '190px',
+                                position: 'relative',
+                            }}
+                        >
+                            <input
+                                type="text"
+                                value={author}
+                                autoComplete="off"
+                                style={{
+                                    fontSize: '100%',
+                                    padding: '0.8em',
+                                    outline: 'none',
+                                    border: '2px solid rgb(200, 200, 200)',
+                                    backgroundColor: 'transparent',
+                                    borderRadius: '20px',
+                                    width: '100%',
+                                }}
+                                onFocus={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    label.style.transform = 'translateY(-50%) scale(.9)'
+                                    label.style.margin = '0em'
+                                    label.style.marginLeft = '1.3em'
+                                    label.style.padding = '0.4em'
+                                    label.style.backgroundColor = '#fff'
+                                    e.target.style.borderColor = 'rgb(150, 150, 200)'
+                                }}
+                                onBlur={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    if (!e.target.value) {
+                                        label.style.transform = 'none'
+                                        label.style.margin = ''
+                                        label.style.marginLeft = '0.5em'
+                                        label.style.padding = '0.8em'
+                                        label.style.backgroundColor = 'transparent'
+                                        e.target.style.borderColor = 'rgb(200, 200, 200)'
+                                    }
+                                }}
+                                onChange={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    if (e.target.value) {
+                                        setAuthor(e.target.value)
+                                        label.style.transform = 'translateY(-50%) scale(.9)'
+                                        label.style.margin = '0em'
+                                        label.style.marginLeft = '1.3em'
+                                        label.style.padding = '0.4em'
+                                        label.style.backgroundColor = '#fff'
+                                        e.target.style.borderColor = 'rgb(150, 150, 200)'
+                                    } else {
+                                        label.style.transform = 'none'
+                                        label.style.margin = ''
+                                        label.style.marginLeft = '0.5em'
+                                        label.style.padding = '0.8em'
+                                        label.style.backgroundColor = 'transparent'
+                                        e.target.style.borderColor = 'rgb(200, 200, 200)'
+                                    }
+                                }}
+                            />
+                            <label
+                                htmlFor="Author"
+                                style={{
+                                    fontSize: '100%',
+                                    position: 'absolute',
+                                    left: '0',
+                                    padding: '0.8em',
+                                    marginLeft: '0.5em',
+                                    pointerEvents: 'none',
+                                    transition: 'all 0.3s ease',
+                                    color: 'rgb(100, 100, 100)',
+                                }}
+                            >
+                                Author
+                            </label>
+                        </div>
+                        <div
+                            style={{
+                                fontFamily: "'Segoe UI', sans-serif",
+                                margin: '1em 0',
+                                maxWidth: '190px',
+                                position: 'relative',
+                            }}
+                        >
+                            <input
+                                type="text"
+                                value={category}
+                                autoComplete="off"
+                                style={{
+                                    fontSize: '100%',
+                                    padding: '0.8em',
+                                    outline: 'none',
+                                    border: '2px solid rgb(200, 200, 200)',
+                                    backgroundColor: 'transparent',
+                                    borderRadius: '20px',
+                                    width: '100%',
+                                }}
+                                onFocus={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    label.style.transform = 'translateY(-50%) scale(.9)'
+                                    label.style.margin = '0em'
+                                    label.style.marginLeft = '1.3em'
+                                    label.style.padding = '0.4em'
+                                    label.style.backgroundColor = '#fff'
+                                    e.target.style.borderColor = 'rgb(150, 150, 200)'
+                                }}
+                                onBlur={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    if (!e.target.value) {
+                                        label.style.transform = 'none'
+                                        label.style.margin = ''
+                                        label.style.marginLeft = '0.5em'
+                                        label.style.padding = '0.8em'
+                                        label.style.backgroundColor = 'transparent'
+                                        e.target.style.borderColor = 'rgb(200, 200, 200)'
+                                    }
+                                }}
+                                onChange={(e) => {
+                                    const label = e.target.nextElementSibling
+                                    if (e.target.value) {
+                                        setCategory(e.target.value)
+                                        label.style.transform = 'translateY(-50%) scale(.9)'
+                                        label.style.margin = '0em'
+                                        label.style.marginLeft = '1.3em'
+                                        label.style.padding = '0.4em'
+                                        label.style.backgroundColor = '#fff'
+                                        e.target.style.borderColor = 'rgb(150, 150, 200)'
+                                    } else {
+                                        label.style.transform = 'none'
+                                        label.style.margin = ''
+                                        label.style.marginLeft = '0.5em'
+                                        label.style.padding = '0.8em'
+                                        label.style.backgroundColor = 'transparent'
+                                        e.target.style.borderColor = 'rgb(200, 200, 200)'
+                                    }
+                                }}
+                            />
+                            <label
+                                htmlFor="Author"
+                                style={{
+                                    fontSize: '100%',
+                                    position: 'absolute',
+                                    left: '0',
+                                    padding: '0.8em',
+                                    marginLeft: '0.5em',
+                                    pointerEvents: 'none',
+                                    transition: 'all 0.3s ease',
+                                    color: 'rgb(100, 100, 100)',
+                                }}
+                            >
+                                Category
+                            </label>
+                        </div>
+                    </div>
+                    <div className="flex flex-col-3 gap-2 justify-center">
+                        <button
+                            style={{
+                                padding: '17px 40px',
+                                borderRadius: '10px',
+                                border: '0',
+                                backgroundColor: 'rgb(255, 56, 86)',
+                                letterSpacing: '1.5px',
+                                fontSize: '15px',
+                                transition: 'all 0.3s ease',
+                                boxShadow: 'rgb(201, 46, 70) 0px 10px 0px 0px',
+                                color: 'hsl(0, 0%, 100%)',
+                                cursor: 'pointer',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 7px 0px 0px'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 10px 0px 0px'
+                            }}
+                            onMouseDown={(e) => {
+                                e.target.style.backgroundColor = 'rgb(255, 56, 86)'
+                                e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 0px 0px 0px'
+                                e.target.style.transform = 'translateY(5px)'
+                                e.target.style.transition = '200ms'
+                            }}
+                            onMouseUp={(e) => {
+                                e.target.style.backgroundColor = 'rgb(255, 56, 86)'
+                                e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 7px 0px 0px'
+                                e.target.style.transform = 'translateY(0)'
+                                e.target.style.transition = 'all 0.3s ease'
+                            }}
+                        >
+                            Найти
+                        </button>
+                    </div>
                 </form>
                 {error && <p className="text-red-500">{error}</p>}
                 {quotes.length > 0 ? (
