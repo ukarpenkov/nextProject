@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Quote } from '../components/Quote'
 import { SearchInput } from '../elements/SearchInput'
+import { Loader } from '../elements/Loader'
 
 export default function Search() {
     const [quote, setQuote] = useState('')
@@ -124,7 +125,7 @@ export default function Search() {
                     searchSubmitted && <p className="text-gray-500">No quotes found</p>
                 )}
             </div>
-            {loading && <p>Loading...</p>}
+            {loading && <Loader />}
         </div>
     )
 }
