@@ -117,6 +117,14 @@ export default function Search() {
                 </form>
                 <div className="flex flex-col-3 gap-2 justify-center mt-4">
                     <button
+                        onClick={() => {
+                            setQuote('')
+                            setAuthor('')
+                            setCategory('')
+                            setQuotes([])
+                            setError(null)
+                            setSearchSubmitted(false)
+                        }}
                         style={{
                             padding: '17px 40px',
                             borderRadius: '10px',
