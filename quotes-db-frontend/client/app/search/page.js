@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Quote } from '../components/Quote'
 import { SearchInput } from '../elements/SearchInput'
 import { Loader } from '../elements/Loader'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Search() {
     const [quote, setQuote] = useState('')
@@ -56,7 +58,11 @@ export default function Search() {
             if (author) params.append('author', author)
             if (category) params.append('category', category)
             const res = await fetch(`http://localhost:3000/quotes?${params.toString()}`)
-            if (!res.ok) throw new Error('Ошибка запроса')
+            if (!res.ok) {
+                const errorMessage = 'Ошибка запроса'
+                toast.error(errorMessage)
+                throw new Error(errorMessage)
+            }
             const data = await res.json()
             setQuotes(data)
         } catch (err) {
@@ -159,7 +165,6 @@ export default function Search() {
                         Очистить
                     </button>
                 </div>
-                {error && <p className="text-red-500">{error}</p>}
                 {quotes.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {quotes.map((quote) => (
