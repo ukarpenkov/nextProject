@@ -39,14 +39,20 @@ export default function Search() {
         setError(null)
         if (!validateInput('quote', quote)) {
             setError('Некорректное значение цитаты')
+            const errorMessage = 'Некорректное значение цитаты'
+            toast.error(errorMessage)
             return
         }
         if (!validateInput('author', author)) {
             setError('Некорректное значение автора')
+            const errorMessage = 'Некорректное значение автора'
+            toast.error(errorMessage)
             return
         }
         if (!validateInput('category', category)) {
             setError('Некорректное значение категории (только маленькие буквы, цифры и - )')
+            const errorMessage = 'Некорректное значение категории (только маленькие буквы, цифры и - )'
+            toast.error(errorMessage)
             return
         }
 
@@ -57,7 +63,9 @@ export default function Search() {
             if (quote) params.append('quote', quote)
             if (author) params.append('author', author)
             if (category) params.append('category', category)
+
             const res = await fetch(`http://localhost:3000/quotes?${params.toString()}`)
+
             if (!res.ok) {
                 const errorMessage = 'Ошибка запроса'
                 toast.error(errorMessage)
@@ -67,6 +75,8 @@ export default function Search() {
             setQuotes(data)
         } catch (err) {
             setError(err.message)
+            const errorMessage = 'Ошибка запроса'
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
