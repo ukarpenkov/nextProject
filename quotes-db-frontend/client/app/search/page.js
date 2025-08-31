@@ -12,6 +12,7 @@ export default function Search() {
     const [author, setAuthor] = useState('')
     const [category, setCategory] = useState('')
     const [quotes, setQuotes] = useState([])
+    const [limit, setLimit] = useState(10)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [searchSubmitted, setSearchSubmitted] = useState(false)
@@ -64,7 +65,7 @@ export default function Search() {
             if (author) params.append('author', author)
             if (category) params.append('category', category)
 
-            const res = await fetch(`http://localhost:3000/quotes?${params.toString()}`)
+            const res = await fetch(`http://localhost:3000/quotes?limit=${limit}${params.toString()}`)
 
             if (!res.ok) {
                 const errorMessage = 'Ошибка запроса'
@@ -91,6 +92,7 @@ export default function Search() {
                         <SearchInput value={quote} setValue={setQuote} placeholder="Quote" />
                         <SearchInput value={author} setValue={setAuthor} placeholder="Author" />
                         <SearchInput value={category} setValue={setCategory} placeholder="Category" />
+                        <SearchInput value={limit} setValue={setLimit} placeholder="Limit" />
                     </div>
                     <div className="flex justify-center gap-3">
                         <div className="flex flex-col-3 gap-2 justify-center">
@@ -137,6 +139,7 @@ export default function Search() {
                             setQuote('')
                             setAuthor('')
                             setCategory('')
+                            setLimit(10)
                             setQuotes([])
                             setError(null)
                             setSearchSubmitted(false)
