@@ -12,7 +12,7 @@ export default function Search() {
     const [author, setAuthor] = useState('')
     const [category, setCategory] = useState('')
     const [quotes, setQuotes] = useState([])
-    const [limit, setLimit] = useState(10)
+    const [limit, setLimit] = useState()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [searchSubmitted, setSearchSubmitted] = useState(false)
@@ -65,12 +65,18 @@ export default function Search() {
             if (author) params.append('author', author)
             if (category) params.append('category', category)
 
-            const res = await fetch(`http://localhost:3000/quotes?limit=${limit}${params.toString()}`)
+            const res = await fetch(`http://localhost:3000/quotes?limit=${!limit ? 10 : limit}${params.toString()}`)
 
             if (!res.ok) {
-                const errorMessage = 'Ошибка запроса'
-                toast.error(errorMessage)
-                throw new Error(errorMessage)
+                const errorData = await res.json()
+                if (errorData.errors && Array.isArray(errorData.errors)) {
+                    errorData.errors.forEach((err) => {
+                        toast.error(`${err.msg} (Path: ${err.path})`)
+                    })
+                } else {
+                    toast.error('An unknown error occurred')
+                }
+                throw new Error('Server responded with an error')
             }
             const data = await res.json()
             setQuotes(data)
@@ -139,7 +145,7 @@ export default function Search() {
                             setQuote('')
                             setAuthor('')
                             setCategory('')
-                            setLimit(10)
+                            setLimit()
                             setQuotes([])
                             setError(null)
                             setSearchSubmitted(false)
