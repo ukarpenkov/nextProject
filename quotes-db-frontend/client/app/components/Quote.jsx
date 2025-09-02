@@ -1,3 +1,4 @@
+'use client'
 export function Quote({ quote }) {
     return (
         <div key={quote.id} className="bg-white p-4 shadow-md rounded-lg">

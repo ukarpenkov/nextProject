@@ -6,6 +6,7 @@ import { SearchInput } from '../elements/SearchInput'
 import { Loader } from '../elements/Loader'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import SearchButton from '../elements/SearchButton '
 
 export default function Search() {
     const [quote, setQuote] = useState('')
@@ -65,13 +66,17 @@ export default function Search() {
             if (author) params.append('author', author)
             if (category) params.append('category', category)
 
-            const res = await fetch(`http://localhost:3000/quotes?limit=${!limit ? 10 : limit}${params.toString()}`)
+            const res = await fetch(`http://localhost:3000/quotes?limit=${!limit ? 10 : limit}&${params.toString()}`)
 
             if (!res.ok) {
                 const errorData = await res.json()
                 if (errorData.errors && Array.isArray(errorData.errors)) {
                     errorData.errors.forEach((err) => {
-                        toast.error(`${err.msg} (Path: ${err.path})`)
+                        if (err && err.msg && err.path) {
+                            toast.error(`${err.msg} (Path: ${err.path})`)
+                        } else {
+                            toast.error('An unknown error occurred')
+                        }
                     })
                 } else {
                     toast.error('An unknown error occurred')
@@ -102,45 +107,14 @@ export default function Search() {
                     </div>
                     <div className="flex justify-center gap-3">
                         <div className="flex flex-col-3 gap-2 justify-center">
-                            <button
-                                style={{
-                                    padding: '17px 40px',
-                                    borderRadius: '10px',
-                                    border: '0',
-                                    backgroundColor: 'rgb(56, 86, 255)',
-                                    letterSpacing: '1.5px',
-                                    fontSize: '15px',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: 'rgb(46, 70, 201) 0px 10px 0px 0px',
-                                    color: 'hsl(0, 0%, 100%)',
-                                    cursor: 'pointer',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.boxShadow = 'rgb(46, 70, 201) 0px 7px 0px 0px'
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.boxShadow = 'rgb(46, 70, 201) 0px 10px 0px 0px'
-                                }}
-                                onMouseDown={(e) => {
-                                    e.target.style.backgroundColor = 'rgb(56, 86, 255)'
-                                    e.target.style.boxShadow = 'rgb(46, 70, 201) 0px 0px 0px 0px'
-                                    e.target.style.transform = 'translateY(5px)'
-                                    e.target.style.transition = '200ms'
-                                }}
-                                onMouseUp={(e) => {
-                                    e.target.style.backgroundColor = 'rgb(56, 86, 255)'
-                                    e.target.style.boxShadow = 'rgb(46, 70, 201) 0px 7px 0px 0px'
-                                    e.target.style.transform = 'translateY(0)'
-                                    e.target.style.transition = 'all 0.3s ease'
-                                }}
-                            >
-                                Найти
-                            </button>
+                            <SearchButton>Найти</SearchButton>
                         </div>
                     </div>
                 </form>
                 <div className="flex flex-col-3 gap-2 justify-center mt-4">
-                    <button
+                    <SearchButton
+                        color="rgb(255, 56, 86)"
+                        shadow="rgb(201, 46, 70)"
                         onClick={() => {
                             setQuote('')
                             setAuthor('')
@@ -150,39 +124,9 @@ export default function Search() {
                             setError(null)
                             setSearchSubmitted(false)
                         }}
-                        style={{
-                            padding: '17px 40px',
-                            borderRadius: '10px',
-                            border: '0',
-                            backgroundColor: 'rgb(255, 56, 86)',
-                            letterSpacing: '1.5px',
-                            fontSize: '15px',
-                            transition: 'all 0.3s ease',
-                            boxShadow: 'rgb(201, 46, 70) 0px 10px 0px 0px',
-                            color: 'hsl(0, 0%, 100%)',
-                            cursor: 'pointer',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 7px 0px 0px'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 10px 0px 0px'
-                        }}
-                        onMouseDown={(e) => {
-                            e.target.style.backgroundColor = 'rgb(255, 56, 86)'
-                            e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 0px 0px 0px'
-                            e.target.style.transform = 'translateY(5px)'
-                            e.target.style.transition = '200ms'
-                        }}
-                        onMouseUp={(e) => {
-                            e.target.style.backgroundColor = 'rgb(255, 56, 86)'
-                            e.target.style.boxShadow = 'rgb(201, 46, 70) 0px 7px 0px 0px'
-                            e.target.style.transform = 'translateY(0)'
-                            e.target.style.transition = 'all 0.3s ease'
-                        }}
                     >
                         Очистить
-                    </button>
+                    </SearchButton>
                 </div>
                 {quotes.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

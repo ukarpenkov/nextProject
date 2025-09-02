@@ -11,7 +11,7 @@ export function SearchInput({ value, setValue, placeholder }) {
         >
             <input
                 type="text"
-                value={value}
+                value={value || ''}
                 autoComplete="off"
                 style={{
                     fontSize: '100%',

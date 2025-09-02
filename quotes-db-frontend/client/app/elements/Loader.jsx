@@ -1,3 +1,4 @@
+'use client'
 export function Loader() {
     return (
         <div
