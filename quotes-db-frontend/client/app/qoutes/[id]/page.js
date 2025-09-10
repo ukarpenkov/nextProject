@@ -1,14 +1,16 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-
+import { use } from 'react'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 export default function QuotePage({ params }) {
-    const id = params?.id
+    const { id } = use(params)
 
     const [quote, setQuote] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-
+    console.log('QuotePage id:', id)
     useEffect(() => {
         const controller = new AbortController()
         const signal = controller.signal
@@ -16,7 +18,7 @@ export default function QuotePage({ params }) {
         setLoading(true)
         setError(null)
 
-        const base = process.env.NEXT_PUBLIC_API_BASE || ''
+        const base = 'http://localhost:3000' || ''
 
         fetch(`${base}/quotes/${id}`, { signal })
             .then((res) => {
@@ -27,6 +29,7 @@ export default function QuotePage({ params }) {
             .catch((err) => {
                 if (err.name === 'AbortError') return
                 setError(err.message || String(err))
+                toast.error(err.message)
             })
             .finally(() => setLoading(false))
 
