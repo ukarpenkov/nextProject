@@ -4,13 +4,16 @@ import React, { useEffect, useState } from 'react'
 import { use } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+
 export default function QuotePage({ params }) {
     const { id } = use(params)
 
     const [quote, setQuote] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+
     console.log('QuotePage id:', id)
+
     useEffect(() => {
         const controller = new AbortController()
         const signal = controller.signal
@@ -35,6 +38,7 @@ export default function QuotePage({ params }) {
 
         return () => controller.abort()
     }, [id])
+
     if (!id) {
         return <div>Quote id is missing</div>
     }
@@ -42,31 +46,74 @@ export default function QuotePage({ params }) {
     if (error) return <div>Failed to load quote: {error}</div>
     if (!quote) return <div>No quote data</div>
 
+    const styles = {
+        card: {
+            padding: '20px',
+            minHeight: '500px',
+            color: 'white',
+            background:
+                'linear-gradient(#212121, #212121) padding-box, linear-gradient(145deg, transparent 35%, #0a89a8, #252e31) border-box',
+            border: '2px solid transparent',
+            borderRadius: '8px',
+            display: 'flex',
+            flexDirection: 'column',
+            cursor: 'pointer',
+            transformOrigin: 'top bottom',
+            transition: 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
+        },
+        mainContent: {
+            flex: 1,
+        },
+        heading: {
+            fontSize: '20px',
+            margin: '16px 0',
+            fontWeight: 600,
+        },
+        categories: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '10px',
+        },
+        categorySpan: {
+            backgroundColor: '#0a89a8',
+            padding: '4px 8px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            fontSize: '12px',
+            borderRadius: '50em',
+        },
+        footer: {
+            fontWeight: 600,
+            color: '#717171',
+            marginTop: '12px',
+        },
+    }
+
     return (
-        <div style={{ padding: 16 }}>
-            <h1>Quote #{quote.id ?? id}</h1>
+        <div
+            style={styles.card}
+            onMouseEnter={(e) => (e.currentTarget.style.rotate = '-6deg')}
+            onMouseLeave={(e) => (e.currentTarget.style.rotate = '0deg')}
+        >
+            <div style={styles.mainContent}>
+                <p style={styles.heading}>{quote.text}</p>
 
-            <blockquote style={{ fontSize: 18, margin: '12px 0', borderLeft: '4px solid #ddd', paddingLeft: 12 }}>{quote.text}</blockquote>
-
-            <p>
-                <strong>Author:</strong> {quote.author ?? 'Unknown'}
-            </p>
-
-            <div>
-                <strong>Categories:</strong>
-                {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
-                    <ul>
-                        {quote.categories.map((c) => (
-                            <li key={c}>{c}</li>
-                        ))}
-                    </ul>
-                ) : (
-                    <div>—</div>
-                )}
+                <div style={styles.categories}>
+                    {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
+                        quote.categories.map((c) => (
+                            <span key={c} style={styles.categorySpan}>
+                                {c}
+                            </span>
+                        ))
+                    ) : (
+                        <span style={styles.categorySpan}>—</span>
+                    )}
+                </div>
             </div>
 
-            <h3>Raw JSON</h3>
-            <pre style={{ background: '#f6f8fa', padding: 12, borderRadius: 6, overflow: 'auto' }}>{JSON.stringify(quote, null, 2)}</pre>
+            <div style={styles.footer}>
+                By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
+            </div>
         </div>
     )
 }
