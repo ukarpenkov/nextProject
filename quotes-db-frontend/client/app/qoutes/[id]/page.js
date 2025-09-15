@@ -1,5 +1,7 @@
 'use client'
 
+import ErrorMessage from '@/app/elements/ErrorMessage'
+import { Loader } from '@/app/elements/Loader'
 import React, { useEffect, useState } from 'react'
 import { use } from 'react'
 import { toast } from 'react-toastify'
@@ -42,8 +44,13 @@ export default function QuotePage({ params }) {
     if (!id) {
         return <div>Quote id is missing</div>
     }
-    if (loading) return <div>Loading quote...</div>
-    if (error) return <div>Failed to load quote: {error}</div>
+    if (loading)
+        return (
+            <div>
+                <Loader />
+            </div>
+        )
+    if (error) return <ErrorMessage error={error} />
     if (!quote) return <div>No quote data</div>
 
     const styles = {
