@@ -97,11 +97,7 @@ export default function QuotePage({ params }) {
     }
 
     return (
-        <div
-            style={styles.card}
-            onMouseEnter={(e) => (e.currentTarget.style.rotate = '-6deg')}
-            onMouseLeave={(e) => (e.currentTarget.style.rotate = '0deg')}
-        >
+        <div style={styles.card}>
             <div style={styles.mainContent}>
                 <p style={styles.heading}>{quote.text}</p>
 

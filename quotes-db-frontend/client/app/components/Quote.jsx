@@ -1,11 +1,11 @@
 'use client'
+import Link from 'next/link'
 import React from 'react'
 
 export function Quote({ quote }) {
     const styles = {
         card: {
-            width: '330px',
-
+            width: '100%',
             padding: '20px',
             color: 'white',
             background:
@@ -50,7 +50,8 @@ export function Quote({ quote }) {
     }
 
     return (
-        <div
+        <Link
+            href={`/quotes/${quote.id}`}
             style={styles.card}
             onMouseEnter={(e) => (e.currentTarget.style.rotate = '-6deg')}
             onMouseLeave={(e) => (e.currentTarget.style.rotate = '0deg')}
@@ -72,6 +73,6 @@ export function Quote({ quote }) {
             </div>
 
             <div style={styles.footer}>— {quote.author ?? 'Unknown'}</div>
-        </div>
+        </Link>
     )
 }
