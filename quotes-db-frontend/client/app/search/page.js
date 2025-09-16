@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Quote } from '../components/Quote'
 import { SearchInput } from '../elements/SearchInput'
 import { Loader } from '../elements/Loader'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SearchButton from '../elements/SearchButton '
+import { useRouter } from 'next/navigation'
 
 export default function Search() {
     const [quote, setQuote] = useState('')
@@ -17,6 +18,39 @@ export default function Search() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [searchSubmitted, setSearchSubmitted] = useState(false)
+    const router = useRouter()
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search)
+        const initialQuote = params.get('quote') || ''
+        const initialAuthor = params.get('author') || ''
+        const initialCategory = params.get('category') || ''
+        const initialLimit = params.get('limit') || ''
+
+        setQuote(initialQuote)
+        setAuthor(initialAuthor)
+        setCategory(initialCategory)
+        setLimit(initialLimit)
+
+        if (initialQuote || initialAuthor || initialCategory || initialLimit) {
+            const fetchData = async () => {
+                setLoading(true)
+                try {
+                    const res = await fetch(`http://localhost:3000/quotes?${params.toString()}`)
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch quotes')
+                    }
+                    const data = await res.json()
+                    setQuotes(data)
+                } catch (err) {
+                    setError(err.message)
+                } finally {
+                    setLoading(false)
+                }
+            }
+            fetchData()
+        }
+    }, [])
 
     const validateInput = (field, value) => {
         const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
@@ -65,8 +99,11 @@ export default function Search() {
             if (quote) params.append('quote', quote)
             if (author) params.append('author', author)
             if (category) params.append('category', category)
+            if (limit) params.append('limit', limit)
 
-            const res = await fetch(`http://localhost:3000/quotes?limit=${!limit ? 10 : limit}&${params.toString()}`)
+            router.push(`/search?${params.toString()}`)
+
+            const res = await fetch(`http://localhost:3000/quotes?${params.toString()}`)
 
             if (!res.ok) {
                 const errorData = await res.json()
@@ -94,6 +131,18 @@ export default function Search() {
         }
     }
 
+    const handleClear = () => {
+        setQuote('')
+        setAuthor('')
+        setCategory('')
+        setLimit()
+        setQuotes([])
+        setError(null)
+        setSearchSubmitted(false)
+
+        router.push('/search')
+    }
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Search Quotes</h1>
@@ -112,19 +161,7 @@ export default function Search() {
                     </div>
                 </form>
                 <div className="flex flex-col-3 gap-2 justify-center mt-4">
-                    <SearchButton
-                        color="rgb(255, 56, 86)"
-                        shadow="rgb(201, 46, 70)"
-                        onClick={() => {
-                            setQuote('')
-                            setAuthor('')
-                            setCategory('')
-                            setLimit()
-                            setQuotes([])
-                            setError(null)
-                            setSearchSubmitted(false)
-                        }}
-                    >
+                    <SearchButton color="rgb(255, 56, 86)" shadow="rgb(201, 46, 70)" onClick={handleClear}>
                         Очистить
                     </SearchButton>
                 </div>
