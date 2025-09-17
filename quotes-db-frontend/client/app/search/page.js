@@ -96,7 +96,7 @@ export default function Search() {
         try {
             setSearchSubmitted(true)
             const params = new URLSearchParams()
-            if (quote) params.append('quote', quote)
+            if (quote) params.append('text', quote)
             if (author) params.append('author', author)
             if (category) params.append('category', category)
             if (limit) params.append('limit', limit)
