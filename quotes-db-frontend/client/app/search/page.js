@@ -22,7 +22,7 @@ export default function Search() {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search)
-        const initialQuote = params.get('quote') || ''
+        const initialQuote = params.get('text') || ''
         const initialAuthor = params.get('author') || ''
         const initialCategory = params.get('category') || ''
         const initialLimit = params.get('limit') || ''
