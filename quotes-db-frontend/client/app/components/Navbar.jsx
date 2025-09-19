@@ -16,6 +16,9 @@ export function Navbar() {
                 <Link href="/search" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
                     Search
                 </Link>
+                <Link href="/create" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
+                    Create new qoute
+                </Link>
             </div>
         </nav>
     )
