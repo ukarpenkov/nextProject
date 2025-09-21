@@ -6,10 +6,33 @@ function CreateNewQuotePage() {
     const [text, setText] = useState('')
     const [author, setAuthor] = useState('')
     const [categories, setCategories] = useState('')
+    const [errors, setErrors] = useState({ text: '', author: '' })
     const router = useRouter()
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = { text: '', author: '' }
+
+        if (text.length < 2) {
+            newErrors.text = 'Quote must be at least 2 characters long.'
+            isValid = false
+        }
+
+        if (!/^[a-zA-Z\s]+$/.test(author)) {
+            newErrors.author = 'Author name must contain only letters and spaces.'
+            isValid = false
+        }
+
+        setErrors(newErrors)
+        return isValid
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        if (!validateForm()) {
+            return
+        }
 
         const quoteData = {
             text,
@@ -111,6 +134,7 @@ function CreateNewQuotePage() {
                             Quote Text:
                         </label>
                         <textarea id="text" value={text} onChange={(e) => setText(e.target.value)} required style={styles.textarea} />
+                        {errors.text && <p style={{ color: 'red' }}>{errors.text}</p>}
                     </div>
                     <div style={styles.formGroup}>
                         <label htmlFor="author" style={styles.label}>
@@ -124,6 +148,7 @@ function CreateNewQuotePage() {
                             required
                             style={styles.input}
                         />
+                        {errors.author && <p style={{ color: 'red' }}>{errors.author}</p>}
                     </div>
                     <div style={styles.formGroup}>
                         <label htmlFor="categories" style={styles.label}>
