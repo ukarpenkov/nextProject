@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { use } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/navigation'
 
 export default function QuotePage({ params }) {
     const { id } = use(params)
@@ -14,7 +15,7 @@ export default function QuotePage({ params }) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    console.log('QuotePage id:', id)
+    const router = useRouter()
 
     useEffect(() => {
         const controller = new AbortController()
@@ -40,6 +41,26 @@ export default function QuotePage({ params }) {
 
         return () => controller.abort()
     }, [id])
+
+    const handleDelete = async () => {
+        if (!id) return
+
+        try {
+            const response = await fetch(`http://localhost:3000/quotes/${id}`, {
+                method: 'DELETE',
+            })
+
+            if (response.ok) {
+                toast.success('Quote deleted successfully')
+                router.push('/')
+            } else {
+                throw new Error('Failed to delete the quote')
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            toast.error(error.message)
+        }
+    }
 
     if (!id) {
         return <div>Quote id is missing</div>
@@ -117,6 +138,21 @@ export default function QuotePage({ params }) {
             <div style={styles.footer}>
                 By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
             </div>
+
+            <button
+                onClick={handleDelete}
+                style={{
+                    marginTop: '20px',
+                    padding: '10px',
+                    backgroundColor: '#d9534f',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                }}
+            >
+                Delete Quote
+            </button>
         </div>
     )
 }
