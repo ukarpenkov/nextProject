@@ -62,6 +62,32 @@ export default function QuotePage({ params }) {
         }
     }
 
+    const handleEdit = async () => {
+        if (!id) return
+
+        const newText = prompt('Enter new quote text:', quote?.text || '')
+        if (!newText) return
+
+        try {
+            const response = await fetch(`http://localhost:3000/quotes/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: newText }),
+            })
+
+            if (response.ok) {
+                const updated = await response.json()
+                setQuote(updated)
+                toast.success('Quote updated successfully')
+            } else {
+                throw new Error('Failed to update the quote')
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            toast.error(error.message)
+        }
+    }
+
     if (!id) {
         return <div>Quote id is missing</div>
     }
@@ -115,6 +141,14 @@ export default function QuotePage({ params }) {
             color: '#717171',
             marginTop: '12px',
         },
+        button: {
+            marginTop: '20px',
+            padding: '10px',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+        },
     }
 
     return (
@@ -139,18 +173,11 @@ export default function QuotePage({ params }) {
                 By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
             </div>
 
-            <button
-                onClick={handleDelete}
-                style={{
-                    marginTop: '20px',
-                    padding: '10px',
-                    backgroundColor: '#d9534f',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                }}
-            >
+            <button onClick={handleEdit} style={{ ...styles.button, backgroundColor: '#0275d8' }}>
+                Edit Quote
+            </button>
+
+            <button onClick={handleDelete} style={{ ...styles.button, backgroundColor: '#d9534f' }}>
                 Delete Quote
             </button>
         </div>
