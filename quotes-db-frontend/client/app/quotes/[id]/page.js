@@ -15,6 +15,8 @@ export default function QuotePage({ params }) {
     const [quote, setQuote] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [isEditing, setIsEditing] = useState(false)
+    const [form, setForm] = useState({ text: '', author: '', categories: '' })
 
     const router = useRouter()
 
@@ -63,23 +65,39 @@ export default function QuotePage({ params }) {
         }
     }
 
-    const handleEdit = async () => {
-        if (!id) return
+    const openEditModal = () => {
+        setForm({
+            text: quote?.text || '',
+            author: quote?.author || '',
+            categories: (quote?.categories || []).join(', '),
+        })
+        setIsEditing(true)
+    }
 
-        const newText = prompt('Enter new quote text:', quote?.text || '')
-        if (!newText) return
-
+    const handleEditSubmit = async () => {
         try {
+            const payload = {
+                text: form.text.trim(),
+                author: form.author.trim() || null,
+                categories: form.categories
+                    ? form.categories
+                          .split(',')
+                          .map((c) => c.trim())
+                          .filter(Boolean)
+                    : [],
+            }
+
             const response = await fetch(`http://localhost:3000/quotes/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: newText }),
+                body: JSON.stringify(payload),
             })
 
             if (response.ok) {
                 const updated = await response.json()
                 setQuote(updated)
                 toast.success('Quote updated successfully')
+                setIsEditing(false)
             } else {
                 throw new Error('Failed to update the quote')
             }
@@ -116,8 +134,33 @@ export default function QuotePage({ params }) {
             transformOrigin: 'top bottom',
             transition: 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
         },
-        mainContent: {
-            flex: 1,
+        modalBackdrop: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        modal: {
+            background: '#1f1f1f',
+            padding: '20px',
+            borderRadius: '10px',
+            minWidth: '400px',
+            color: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+        },
+        input: {
+            padding: '8px',
+            borderRadius: '5px',
+            border: '1px solid #444',
+            background: '#2a2a2a',
+            color: 'white',
         },
         heading: {
             fontSize: '20px',
@@ -141,14 +184,6 @@ export default function QuotePage({ params }) {
             fontWeight: 600,
             color: '#717171',
             marginTop: '12px',
-        },
-        button: {
-            marginTop: '20px',
-            padding: '10px',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
         },
     }
 
@@ -174,7 +209,7 @@ export default function QuotePage({ params }) {
                 By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
             </div>
             <div className="mt-4 flex gap-4 justify-end">
-                <SearchButton onClick={handleEdit} color="#0275d8" shadow="#025aa5">
+                <SearchButton onClick={openEditModal} color="#0275d8" shadow="#025aa5">
                     Edit Quote
                 </SearchButton>
 
@@ -182,6 +217,41 @@ export default function QuotePage({ params }) {
                     Delete Quote
                 </SearchButton>
             </div>
+
+            {isEditing && (
+                <div style={styles.modalBackdrop}>
+                    <div style={styles.modal}>
+                        <h2>Edit Quote</h2>
+                        <input
+                            style={styles.input}
+                            value={form.text}
+                            onChange={(e) => setForm({ ...form, text: e.target.value })}
+                            placeholder="Quote text"
+                        />
+                        <input
+                            style={styles.input}
+                            value={form.author}
+                            onChange={(e) => setForm({ ...form, author: e.target.value })}
+                            placeholder="Author name"
+                        />
+                        <input
+                            style={styles.input}
+                            value={form.categories}
+                            onChange={(e) => setForm({ ...form, categories: e.target.value })}
+                            placeholder="Categories (comma separated)"
+                        />
+
+                        <div className="flex justify-end gap-3 mt-3">
+                            <SearchButton onClick={() => setIsEditing(false)} color="#6c757d" shadow="#545b62">
+                                Cancel
+                            </SearchButton>
+                            <SearchButton onClick={handleEditSubmit} color="#5cb85c" shadow="#449d44">
+                                OK
+                            </SearchButton>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
