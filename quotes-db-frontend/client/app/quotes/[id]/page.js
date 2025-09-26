@@ -7,6 +7,7 @@ import { use } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
+import SearchButton from '@/app/elements/SearchButton '
 
 export default function QuotePage({ params }) {
     const { id } = use(params)
@@ -172,14 +173,15 @@ export default function QuotePage({ params }) {
             <div style={styles.footer}>
                 By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
             </div>
+            <div className="mt-4 flex gap-4 justify-end">
+                <SearchButton onClick={handleEdit} color="#0275d8" shadow="#025aa5">
+                    Edit Quote
+                </SearchButton>
 
-            <button onClick={handleEdit} style={{ ...styles.button, backgroundColor: '#0275d8' }}>
-                Edit Quote
-            </button>
-
-            <button onClick={handleDelete} style={{ ...styles.button, backgroundColor: '#d9534f' }}>
-                Delete Quote
-            </button>
+                <SearchButton onClick={handleDelete} color="#d9534f" shadow="#b52b27">
+                    Delete Quote
+                </SearchButton>
+            </div>
         </div>
     )
 }
