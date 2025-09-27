@@ -126,12 +126,16 @@ export default function QuotePage({ params }) {
                 body: JSON.stringify(payload),
             })
 
+            console.log('Response:', response) // Log the response object for debugging
+
             if (response.ok) {
                 const updated = await response.json()
                 setQuote(updated)
                 toast.success('Quote updated successfully')
                 setIsEditing(false)
             } else {
+                const errorData = await response.json() // Attempt to parse error details
+                console.error('Error details:', errorData)
                 throw new Error('Failed to update the quote')
             }
         } catch (error) {
