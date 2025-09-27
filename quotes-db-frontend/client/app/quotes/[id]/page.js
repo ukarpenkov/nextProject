@@ -75,11 +75,12 @@ export default function QuotePage({ params }) {
     }
 
     const validateInput = (field, value) => {
-        const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
-        const QUOTE_REGEX = /^[a-zA-Z0-9\s.,!?\'"-]+$/
-        const AUTHOR_REGEX = /^[a-zA-Z\s.,!?\'"-]+$/
+        const CATEGORY_NAME_REGEX = /^[a-z\-\,\s]+$/
+        const QUOTE_REGEX = /^[\s\S]{2,}$/
+        const AUTHOR_REGEX = /^[a-zA-Z\s\-,]+$/
 
-        if (!value) return true
+        if (!value) return false
+
         switch (field) {
             case 'text':
                 return QUOTE_REGEX.test(value)
@@ -88,7 +89,7 @@ export default function QuotePage({ params }) {
             case 'categories':
                 return CATEGORY_NAME_REGEX.test(value)
             default:
-                return true
+                return false
         }
     }
 
@@ -126,15 +127,14 @@ export default function QuotePage({ params }) {
                 body: JSON.stringify(payload),
             })
 
-            console.log('Response:', response) // Log the response object for debugging
-
+            console.log('Response:', response)
             if (response.ok) {
                 const updated = await response.json()
                 setQuote(updated)
                 toast.success('Quote updated successfully')
                 setIsEditing(false)
             } else {
-                const errorData = await response.json() // Attempt to parse error details
+                const errorData = await response.json()
                 console.error('Error details:', errorData)
                 throw new Error('Failed to update the quote')
             }
