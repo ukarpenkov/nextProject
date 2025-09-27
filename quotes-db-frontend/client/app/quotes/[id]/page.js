@@ -74,7 +74,40 @@ export default function QuotePage({ params }) {
         setIsEditing(true)
     }
 
+    const validateInput = (field, value) => {
+        const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
+        const QUOTE_REGEX = /^[a-zA-Z0-9\s.,!?\'"-]+$/
+        const AUTHOR_REGEX = /^[a-zA-Z\s.,!?\'"-]+$/
+
+        if (!value) return true
+        switch (field) {
+            case 'text':
+                return QUOTE_REGEX.test(value)
+            case 'author':
+                return AUTHOR_REGEX.test(value)
+            case 'categories':
+                return CATEGORY_NAME_REGEX.test(value)
+            default:
+                return true
+        }
+    }
+
     const handleEditSubmit = async () => {
+        setError(null)
+
+        if (!validateInput('text', form.text)) {
+            toast.error('Invalid quote text')
+            return
+        }
+        if (!validateInput('author', form.author)) {
+            toast.error('Invalid author name')
+            return
+        }
+        if (!validateInput('categories', form.categories)) {
+            toast.error('Invalid categories (only lowercase letters, numbers, and dashes are allowed)')
+            return
+        }
+
         try {
             const payload = {
                 text: form.text.trim(),
