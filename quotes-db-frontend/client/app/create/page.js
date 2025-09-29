@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import FormField from '../elements/FormField'
 
 function CreateNewQuotePage() {
     const [text, setText] = useState('')
@@ -129,40 +130,37 @@ function CreateNewQuotePage() {
             <div style={styles.card}>
                 <h1 style={styles.heading}>Create New Quote</h1>
                 <form onSubmit={handleSubmit}>
-                    <div style={styles.formGroup}>
-                        <label htmlFor="text" style={styles.label}>
-                            Quote Text:
-                        </label>
-                        <textarea id="text" value={text} onChange={(e) => setText(e.target.value)} required style={styles.textarea} />
-                        {errors.text && <p style={{ color: 'red' }}>{errors.text}</p>}
-                    </div>
-                    <div style={styles.formGroup}>
-                        <label htmlFor="author" style={styles.label}>
-                            Author:
-                        </label>
-                        <input
-                            id="author"
-                            type="text"
-                            value={author}
-                            onChange={(e) => setAuthor(e.target.value)}
-                            required
-                            style={styles.input}
-                        />
-                        {errors.author && <p style={{ color: 'red' }}>{errors.author}</p>}
-                    </div>
-                    <div style={styles.formGroup}>
-                        <label htmlFor="categories" style={styles.label}>
-                            Categories (comma-separated):
-                        </label>
-                        <input
-                            id="categories"
-                            type="text"
-                            value={categories}
-                            onChange={(e) => setCategories(e.target.value)}
-                            required
-                            style={styles.input}
-                        />
-                    </div>
+                    <FormField
+                        id="text"
+                        label="Quote Text:"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        error={errors.text}
+                        required
+                        textarea
+                        styles={styles}
+                    />
+
+                    <FormField
+                        id="author"
+                        label="Author:"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        error={errors.author}
+                        required
+                        type="text"
+                        styles={styles}
+                    />
+
+                    <FormField
+                        id="categories"
+                        label="Categories (comma-separated):"
+                        value={categories}
+                        onChange={(e) => setCategories(e.target.value)}
+                        required
+                        type="text"
+                        styles={styles}
+                    />
                     <button type="submit" style={styles.button}>
                         Create
                     </button>
