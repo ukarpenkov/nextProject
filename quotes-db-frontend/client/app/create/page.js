@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import FormField from '../elements/FormField'
+import SearchButton from '../elements/SearchButton '
 
 function CreateNewQuotePage() {
     const [text, setText] = useState('')
@@ -14,8 +15,8 @@ function CreateNewQuotePage() {
         let isValid = true
         const newErrors = { text: '', author: '' }
 
-        if (text.length < 2) {
-            newErrors.text = 'Quote must be at least 2 characters long.'
+        if (text.length < 10) {
+            newErrors.text = 'Quote must be at least 10 characters long.'
             isValid = false
         }
 
@@ -161,9 +162,9 @@ function CreateNewQuotePage() {
                         type="text"
                         styles={styles}
                     />
-                    <button type="submit" style={styles.button}>
+                    <SearchButton onClick={() => ''} submit={true}>
                         Create
-                    </button>
+                    </SearchButton>
                 </form>
             </div>
         </div>
