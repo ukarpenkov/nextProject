@@ -259,8 +259,8 @@ export default function QuotePage({ params }) {
                 <div style={styles.modalBackdrop}>
                     <div style={styles.modal}>
                         <h2>Edit Quote</h2>
-                        <input
-                            style={styles.input}
+                        <textarea
+                            style={{ ...styles.input, height: '150px' }}
                             value={form.text}
                             onChange={(e) => setForm({ ...form, text: e.target.value })}
                             placeholder="Quote text"
