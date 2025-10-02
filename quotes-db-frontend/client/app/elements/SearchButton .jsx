@@ -1,4 +1,5 @@
 'use client'
+
 const SearchButton = ({ children, color = 'rgb(56, 86, 255)', shadow = 'rgb(46, 70, 201)', onClick }) => {
     const baseStyle = {
         padding: '17px 40px',

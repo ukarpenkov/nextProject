@@ -1,5 +1,4 @@
 'use client'
-
 import ErrorMessage from '@/app/elements/ErrorMessage'
 import { Loader } from '@/app/elements/Loader'
 import React, { useEffect, useState } from 'react'
@@ -11,7 +10,6 @@ import SearchButton from '@/app/elements/SearchButton '
 
 export default function QuotePage({ params }) {
     const { id } = use(params)
-
     const [quote, setQuote] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)

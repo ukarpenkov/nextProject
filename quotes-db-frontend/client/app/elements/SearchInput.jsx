@@ -1,4 +1,5 @@
 'use client'
+
 export function SearchInput({ value, setValue, placeholder }) {
     return (
         <div

@@ -1,4 +1,5 @@
 'use client'
+
 import * as React from 'react'
 const ErrorSvg = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={429.333} height={357.333} viewBox="0 0 322 268" {...props}>

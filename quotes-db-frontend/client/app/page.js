@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Quote } from './components/Quote'
-import { QuoteButton } from './components/QuoteButton'
 import SearchButton from './elements/SearchButton '
 
 export default function Home() {

@@ -1,4 +1,5 @@
 'use client'
+
 export function QuoteButton(props) {
     const { text, fecthRandomQuotes } = props
     return (

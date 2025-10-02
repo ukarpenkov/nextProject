@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { Quote } from '../components/Quote'
 import { SearchInput } from '../elements/SearchInput'
