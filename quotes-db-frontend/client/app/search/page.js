@@ -171,10 +171,18 @@ export default function Search() {
                         ))}
                     </div>
                 ) : (
-                    searchSubmitted && <p className="text-gray-500">No quotes found</p>
+                    searchSubmitted && (
+                        <div className="flex items-center justify-center h-full">
+                            <p className="text-gray-500 text-lg font-medium text-center">No quotes found</p>
+                        </div>
+                    )
                 )}
             </div>
-            {loading && <Loader />}
+            {loading && (
+                <div className="flex items-center justify-center h-full">
+                    <Loader />
+                </div>
+            )}
         </div>
     )
 }
