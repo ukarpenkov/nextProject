@@ -179,7 +179,7 @@ export default function Search() {
                 )}
             </div>
             {loading && (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-full ml-[-60px]">
                     <Loader />
                 </div>
             )}
