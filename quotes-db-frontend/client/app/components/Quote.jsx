@@ -62,9 +62,9 @@ export function Quote({ quote }) {
                 <div style={styles.categories}>
                     {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
                         quote.categories.map((category) => (
-                            <span key={category} style={styles.categorySpan}>
+                            <Link key={category} href={`/search?category=${encodeURIComponent(category)}`} style={styles.categorySpan}>
                                 {category}
-                            </span>
+                            </Link>
                         ))
                     ) : (
                         <span style={styles.categorySpan}>—</span>
