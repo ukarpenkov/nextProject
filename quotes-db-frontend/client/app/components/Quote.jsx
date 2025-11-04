@@ -1,8 +1,12 @@
 'use client'
 import Link from 'next/link'
 import React from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export function Quote({ quote }) {
+    const searchParams = useSearchParams()
+    const activeCategory = searchParams.get('category')
+
     const styles = {
         card: {
             width: '100%',
@@ -17,6 +21,7 @@ export function Quote({ quote }) {
             cursor: 'pointer',
             transformOrigin: 'top bottom',
             transition: 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
+            textDecoration: 'none',
         },
         mainContent: {
             flex: 1,
@@ -33,14 +38,16 @@ export function Quote({ quote }) {
             gap: '10px',
             marginTop: '12px',
         },
-        categorySpan: {
-            backgroundColor: '#0a89a8',
+        categorySpan: (isActive) => ({
+            backgroundColor: isActive ? 'yellow' : '#0a89a8',
+            color: isActive ? 'black' : 'white',
             padding: '4px 8px',
             fontWeight: 600,
             textTransform: 'uppercase',
             fontSize: '12px',
             borderRadius: '50em',
-        },
+            textDecoration: 'none',
+        }),
         footer: {
             fontWeight: 600,
             color: '#717171',
@@ -50,29 +57,37 @@ export function Quote({ quote }) {
     }
 
     return (
-        <Link
-            href={`/quotes/${quote.id}`}
-            style={styles.card}
-            onMouseEnter={(e) => (e.currentTarget.style.rotate = '-6deg')}
-            onMouseLeave={(e) => (e.currentTarget.style.rotate = '0deg')}
-        >
-            <div style={styles.mainContent}>
-                <p style={styles.heading}>&quot;{quote.text}&quot;</p>
+        <Link href={`/quotes/${quote.id}`} passHref legacyBehavior>
+            <div
+                style={styles.card}
+                onMouseEnter={(e) => (e.currentTarget.style.rotate = '-6deg')}
+                onMouseLeave={(e) => (e.currentTarget.style.rotate = '0deg')}
+            >
+                <div style={styles.mainContent}>
+                    <p style={styles.heading}>&quot;{quote.text}&quot;</p>
 
-                <div style={styles.categories}>
-                    {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
-                        quote.categories.map((category) => (
-                            <Link key={category} href={`/search?category=${encodeURIComponent(category)}`} style={styles.categorySpan}>
-                                {category}
-                            </Link>
-                        ))
-                    ) : (
-                        <span style={styles.categorySpan}>—</span>
-                    )}
+                    <div style={styles.categories}>
+                        {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
+                            quote.categories.map((category) => {
+                                const isActive = activeCategory === category
+                                return (
+                                    <Link
+                                        key={category}
+                                        href={`/search?category=${encodeURIComponent(category)}`}
+                                        style={styles.categorySpan(isActive)}
+                                    >
+                                        {category}
+                                    </Link>
+                                )
+                            })
+                        ) : (
+                            <span style={styles.categorySpan(false)}>—</span>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            <div style={styles.footer}>— {quote.author ?? 'Unknown'}</div>
+                <div style={styles.footer}>— {quote.author ?? 'Unknown'}</div>
+            </div>
         </Link>
     )
 }

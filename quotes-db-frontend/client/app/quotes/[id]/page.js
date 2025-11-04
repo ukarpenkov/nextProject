@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react'
 import { use } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import SearchButton from '@/app/elements/SearchButton '
 
 export default function QuotePage({ params }) {
@@ -15,8 +16,9 @@ export default function QuotePage({ params }) {
     const [error, setError] = useState(null)
     const [isEditing, setIsEditing] = useState(false)
     const [form, setForm] = useState({ text: '', author: '', categories: '' })
-
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const activeCategory = searchParams.get('category')
 
     useEffect(() => {
         const controller = new AbortController()
@@ -125,7 +127,6 @@ export default function QuotePage({ params }) {
                 body: JSON.stringify(payload),
             })
 
-            console.log('Response:', response)
             if (response.ok) {
                 const updated = await response.json()
                 setQuote(updated)
@@ -142,15 +143,8 @@ export default function QuotePage({ params }) {
         }
     }
 
-    if (!id) {
-        return <div>Quote id is missing</div>
-    }
-    if (loading)
-        return (
-            <div>
-                <Loader />
-            </div>
-        )
+    if (!id) return <div>Quote id is missing</div>
+    if (loading) return <Loader />
     if (error) return <ErrorMessage error={error} />
     if (!quote) return <div>No quote data</div>
 
@@ -165,37 +159,8 @@ export default function QuotePage({ params }) {
             borderRadius: '8px',
             display: 'flex',
             flexDirection: 'column',
-            cursor: 'pointer',
             transformOrigin: 'top bottom',
             transition: 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
-        },
-        modalBackdrop: {
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        modal: {
-            background: '#1f1f1f',
-            padding: '20px',
-            borderRadius: '10px',
-            minWidth: '400px',
-            color: 'white',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-        },
-        input: {
-            padding: '8px',
-            borderRadius: '5px',
-            border: '1px solid #444',
-            background: '#2a2a2a',
-            color: 'white',
         },
         heading: {
             fontSize: '20px',
@@ -206,15 +171,18 @@ export default function QuotePage({ params }) {
             display: 'flex',
             flexWrap: 'wrap',
             gap: '10px',
+            marginTop: '12px',
         },
-        categorySpan: {
-            backgroundColor: '#0a89a8',
+        categorySpan: (isActive) => ({
+            backgroundColor: isActive ? 'yellow' : '#0a89a8',
+            color: isActive ? 'black' : 'white',
             padding: '4px 8px',
             fontWeight: 600,
             textTransform: 'uppercase',
             fontSize: '12px',
             borderRadius: '50em',
-        },
+            textDecoration: 'none',
+        }),
         footer: {
             fontWeight: 600,
             color: '#717171',
@@ -229,13 +197,20 @@ export default function QuotePage({ params }) {
 
                 <div style={styles.categories}>
                     {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
-                        quote.categories.map((c) => (
-                            <span key={c} style={styles.categorySpan}>
-                                {c}
-                            </span>
-                        ))
+                        quote.categories.map((category) => {
+                            const isActive = activeCategory === category
+                            return (
+                                <Link
+                                    key={category}
+                                    href={`/search?category=${encodeURIComponent(category)}`}
+                                    style={styles.categorySpan(isActive)}
+                                >
+                                    {category}
+                                </Link>
+                            )
+                        })
                     ) : (
-                        <span style={styles.categorySpan}>—</span>
+                        <span style={styles.categorySpan(false)}>—</span>
                     )}
                 </div>
             </div>
@@ -243,6 +218,7 @@ export default function QuotePage({ params }) {
             <div style={styles.footer}>
                 By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
             </div>
+
             <div className="mt-4 flex gap-4 justify-end">
                 <SearchButton onClick={openEditModal} color="#0275d8" shadow="#025aa5">
                     Edit Quote
@@ -254,23 +230,53 @@ export default function QuotePage({ params }) {
             </div>
 
             {isEditing && (
-                <div style={styles.modalBackdrop}>
-                    <div style={styles.modal}>
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0,0,0,0.6)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <div
+                        style={{
+                            background: '#1f1f1f',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            minWidth: '400px',
+                            color: 'white',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '12px',
+                        }}
+                    >
                         <h2>Edit Quote</h2>
                         <textarea
-                            style={{ ...styles.input, height: '150px' }}
+                            style={{
+                                padding: '8px',
+                                borderRadius: '5px',
+                                border: '1px solid #444',
+                                background: '#2a2a2a',
+                                color: 'white',
+                                height: '150px',
+                            }}
                             value={form.text}
                             onChange={(e) => setForm({ ...form, text: e.target.value })}
                             placeholder="Quote text"
                         />
                         <input
-                            style={styles.input}
+                            style={{ padding: '8px', borderRadius: '5px', border: '1px solid #444', background: '#2a2a2a', color: 'white' }}
                             value={form.author}
                             onChange={(e) => setForm({ ...form, author: e.target.value })}
                             placeholder="Author name"
                         />
                         <input
-                            style={styles.input}
+                            style={{ padding: '8px', borderRadius: '5px', border: '1px solid #444', background: '#2a2a2a', color: 'white' }}
                             value={form.categories}
                             onChange={(e) => setForm({ ...form, categories: e.target.value })}
                             placeholder="Categories (comma separated)"
