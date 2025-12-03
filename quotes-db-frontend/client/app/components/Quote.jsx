@@ -86,7 +86,19 @@ export function Quote({ quote }) {
                     </div>
                 </div>
 
-                <div style={styles.footer}>— {quote.author ?? 'Unknown'}</div>
+                <div style={styles.footer}>
+                    —{' '}
+                    {quote.author ? (
+                        <Link
+                            href={`/search?author=${encodeURIComponent(quote.author)}`}
+                            style={{ color: '#717171', textDecoration: 'none' }}
+                        >
+                            {quote.author}
+                        </Link>
+                    ) : (
+                        'Unknown'
+                    )}
+                </div>
             </div>
         </Link>
     )

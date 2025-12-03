@@ -216,7 +216,15 @@ export default function QuotePage({ params }) {
             </div>
 
             <div style={styles.footer}>
-                By {quote.author ?? 'Unknown'} | Quote #{quote.id ?? id}
+                By{' '}
+                {quote.author ? (
+                    <Link href={`/search?author=${encodeURIComponent(quote.author)}`} style={{ color: '#0a89a8', textDecoration: 'none' }}>
+                        {quote.author}
+                    </Link>
+                ) : (
+                    'Unknown'
+                )}{' '}
+                | Quote #{quote.id ?? id}
             </div>
 
             <div className="mt-4 flex gap-4 justify-end">
