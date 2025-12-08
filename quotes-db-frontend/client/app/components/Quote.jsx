@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 
 export function Quote({ quote }) {
     const searchParams = useSearchParams()
+    const searchText = searchParams.get('text')
     const activeCategory = searchParams.get('category')
 
     const styles = {
@@ -32,6 +33,9 @@ export function Quote({ quote }) {
             fontWeight: 600,
             fontStyle: 'italic',
         },
+        highlightedText: {
+            color: 'yellow',
+        },
         categories: {
             display: 'flex',
             flexWrap: 'wrap',
@@ -56,6 +60,20 @@ export function Quote({ quote }) {
         },
     }
 
+    const highlightText = (text, searchText) => {
+        if (!searchText) return text
+        const parts = text.split(new RegExp(`(${searchText})`, 'gi'))
+        return parts.map((part, index) =>
+            part.toLowerCase() === searchText.toLowerCase() ? (
+                <span key={index} style={styles.highlightedText}>
+                    {part}
+                </span>
+            ) : (
+                part
+            )
+        )
+    }
+
     return (
         <Link href={`/quotes/${quote.id}`} passHref legacyBehavior>
             <div
@@ -64,7 +82,7 @@ export function Quote({ quote }) {
                 onMouseLeave={(e) => (e.currentTarget.style.rotate = '0deg')}
             >
                 <div style={styles.mainContent}>
-                    <p style={styles.heading}>&quot;{quote.text}&quot;</p>
+                    <p style={styles.heading}>{highlightText(`"${quote.text}"`, searchText)}</p>
 
                     <div style={styles.categories}>
                         {Array.isArray(quote.categories) && quote.categories.length > 0 ? (
