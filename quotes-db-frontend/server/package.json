@@ -7,7 +7,7 @@
     "dev": "nodemon server.js"
   },
   "keywords": [],
-  "author": "Bogdan Stashchuk",
+  "author": "",
   "license": "MIT",
   "description": "",
   "dependencies": {
