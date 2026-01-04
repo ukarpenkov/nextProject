@@ -1,17 +1,17 @@
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import CreateNewQuotePage from '../page'
 
-jest.mock('next/navigation', () => {
-    return {
-        useRouter: () => ({
-            push: jest.fn(),
-        }),
-    }
-})
+const mockPush = jest.fn()
+
+jest.mock('next/navigation', () => ({
+    useRouter: () => ({ push: mockPush }),
+}))
 
 describe('CreateNewQuotePage URL formation', () => {
     beforeEach(() => {
+        jest.clearAllMocks()
+        mockPush.mockClear()
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
             json: () => Promise.resolve({ id: 123 }),
@@ -23,19 +23,28 @@ describe('CreateNewQuotePage URL formation', () => {
     })
 
     it('builds correct redirect URL after successful creation', async () => {
-        const { getByLabelText, getByText } = render(<CreateNewQuotePage />)
+        render(<CreateNewQuotePage />)
 
-        fireEvent.change(getByLabelText('Quote Text:'), { target: { value: 'This is a valid quote text.' } })
-        fireEvent.change(getByLabelText('Author:'), { target: { value: 'John Doe' } })
-        fireEvent.change(getByLabelText('Categories (comma-separated):'), { target: { value: 'life, wisdom' } })
+        fireEvent.change(screen.getByLabelText('Quote Text:'), {
+            target: { value: 'This is a valid quote text.' },
+        })
+        fireEvent.change(screen.getByLabelText('Author:'), {
+            target: { value: 'John Doe' },
+        })
+        fireEvent.change(screen.getByLabelText('Categories (comma-separated):'), {
+            target: { value: 'life, wisdom' },
+        })
 
-        fireEvent.click(getByText('Create'))
+        fireEvent.click(screen.getByText('Create'))
 
         await waitFor(() => {
+            expect(global.fetch).toHaveBeenCalledTimes(1)
             expect(global.fetch).toHaveBeenCalledWith('http://localhost:3000/quotes', expect.objectContaining({ method: 'POST' }))
         })
 
-        const mockedRouter = require('next/navigation').useRouter()
-        expect(mockedRouter.push).toHaveBeenCalledWith('http://localhost:5000/quotes/123')
+        await waitFor(() => {
+            expect(mockPush).toHaveBeenCalledTimes(1)
+            expect(mockPush).toHaveBeenCalledWith('http://localhost:5000/quotes/123')
+        })
     })
 })
