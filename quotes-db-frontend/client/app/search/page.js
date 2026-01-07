@@ -186,3 +186,21 @@ export default function Search() {
         </div>
     )
 }
+
+export const validateInput = (field, value) => {
+    const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
+    const QUOTE_REGEX = /^[a-zA-Z0-9\s.,!?'"-]+$/
+    const AUTHOR_REGEX = /^[a-zA-Z\s.,!?'"-]+$/
+
+    if (!value) return true
+    switch (field) {
+        case 'quote':
+            return QUOTE_REGEX.test(value)
+        case 'author':
+            return AUTHOR_REGEX.test(value)
+        case 'category':
+            return CATEGORY_NAME_REGEX.test(value)
+        default:
+            return true
+    }
+}
